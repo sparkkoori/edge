@@ -530,7 +530,104 @@ function zoomout(){
 	diagram.scaleBy(1/2)
 }
 
+function customizeColors(){
+	let layer = d3.select("body").select(".color-layer")
+	if(!layer.empty()){
+		layer.remove()
+	}else{
+		layer = d3.select("body").append("div")
+			.classed("color-layer",true)
+			.style("left",0)
+			.style("right",0)
+			.style("top",0)
+			.style("bottom",0)
+			.style("position","absolute")
+			.style("z-index",80)
+			.style("background","rgba(100,100,100,0.2)")
+
+		let box = layer.append("div")
+			.style("position","relative")
+			.style("top","80px")
+			.style("left","50%")
+			.style("width","200px")
+			.style("margin-left","-110px")
+			.style("background","rgba(200,200,200,0.9)")
+			.style("padding","10px 20px")
+			.style("font-size","14px")
+			.style("color","#333")
+			.style("border-radius","2px")
+			.style("box-shadow","0px 0px 5px 1px rgba(0,0,0,0.4)")
+
+		layer.on("click",()=>{layer.remove()})
+		box.on("click",()=>{d3.event.stopPropagation()})
+
+		let its = box.selectAll("div")
+			.data(storage.colors)
+
+		let _its = its.enter().append("div")
+			.style("margin","1px")
+		_its.append("div").classed("label",true)
+			.style("display","inline-block")
+			.style("width","60px")
+			.html((d,i)=>"Color "+i)
+		_its.append("input").classed("input",true)
+			.attr("type","color")
+			.on("change",function(_,i){
+				let c = d3.color(this.value)
+				let rev = storage.customizeColor(i,c+"")
+				recorder.record("Customize Color "+ i,rev)
+			})
+
+		its = _its.merge(its)
+		let refresh = function(){
+			its.select(".input")
+				.each(function(d,i){
+					let c = d3.color(storage.colors[i])
+					let hex = common.rgbToHex(c.r,c.g,c.b)
+					this.value = hex
+				})
+		}
+		storage.dispatch.on("changed",refresh)
+		refresh()
+	}
+}
+
+function switchColor(){
+	let revs = []
+	let nodes = diagram.getSelectedNodes()
+	if (nodes.length ==0) {
+		showMsgEmptySelection()
+		return
+	}
+	let c = nodes[0].vert.color
+	c++
+	if (c==10) c=1
+	for (let n of nodes) {
+		revs.push(storage.setColor(n.vert,c))
+	}
+	recorder.record("Switch Color",()=>common.callRevs(revs))
+	diagram.refreshStyle()
+}
+
+{
+	for (let i = 0; i < 10; i++) {
+		global["color"+i] = function(){
+			let revs = []
+			diagram.forEachSelectedNode(n=>{
+				let v = n.vert
+				revs.push(storage.setColor(v,i))
+			})
+			recorder.record("Color "+ i,()=>common.callRevs(revs))
+			diagram.refreshStyle()
+		}
+	}
+}
+
 /***********************************************************/
+
+function showMsgEmptySelection(){
+	//TODO
+}
 
 function isVertNameBoxOpened(){
 	return !d3.select("body").select(".rename-box").empty()

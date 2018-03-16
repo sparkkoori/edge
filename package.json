@@ -1,6 +1,6 @@
 {
   "name": "Edge",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "A easy to use graph(discrete mathematics) editor.",
   "main": "main.js",
   "scripts": {

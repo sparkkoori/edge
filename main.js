@@ -160,7 +160,97 @@ const template = [
 				click () {
 					sendCmd("rename")
 				}
-			}
+			},
+			{
+        label: 'Color',
+        submenu: [
+					{
+						label: 'Customize Colors',
+						accelerator: 'Shift+Alt+C',
+						click () {
+							sendCmd("customizeColors")
+						}
+					},
+					{
+						label: 'Switch Color',
+						accelerator: 'Alt+C',
+						click () {
+							sendCmd("switchColor")
+						}
+					},
+					{type: 'separator'},
+					{
+						label: 'Color 0',
+						accelerator: 'Alt+0',
+						click () {
+							sendCmd("color0")
+						}
+					},
+          {
+						label: 'Color 1',
+						accelerator: 'Alt+1',
+						click () {
+							sendCmd("color1")
+						}
+					},
+					{
+						label: 'Color 2',
+						accelerator: 'Alt+2',
+						click () {
+							sendCmd("color2")
+						}
+					},
+					{
+						label: 'Color 3',
+						accelerator: 'Alt+3',
+						click () {
+							sendCmd("color3")
+						}
+					},
+					{
+						label: 'Color 4',
+						accelerator: 'Alt+4',
+						click () {
+							sendCmd("color4")
+						}
+					},
+					{
+						label: 'Color 5',
+						accelerator: 'Alt+5',
+						click () {
+							sendCmd("color5")
+						}
+					},
+					{
+						label: 'Color 6',
+						accelerator: 'Alt+6',
+						click () {
+							sendCmd("color6")
+						}
+					},
+					{
+						label: 'Color 7',
+						accelerator: 'Alt+7',
+						click () {
+							sendCmd("color7")
+						}
+					},
+					{
+						label: 'Color 8',
+						accelerator: 'Alt+8',
+						click () {
+							sendCmd("color8")
+						}
+					},
+					{
+						label: 'Color 9',
+						accelerator: 'Alt+9',
+						click () {
+							sendCmd("color9")
+						}
+					}
+        ]
+      }
 		]
 	},
 	{
@@ -370,5 +460,6 @@ function openWindow(p){
 
 function sendCmd(cmd){
 	let win = BrowserWindow.getFocusedWindow()
+	if (!win) return
 	win.webContents.send("cmd",cmd)
 }

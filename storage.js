@@ -45,6 +45,19 @@ class C{
 		this.vertMap = new Map()
 		this.edgeMap = new Map()
 		this.dispatch = d3.dispatch("changed","vert:new")
+		this.colors = [
+			"#999999", "#dc3912", "#ff9900", "#109618", "#990099",
+			"#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395",
+			// "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300",
+			// "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"
+		]
+		{
+			for (let i = 0; i < this.colors.length; i++) {
+				let c = d3.hsl(this.colors[i])
+				c.l += 0.1
+				this.colors[i] = c + ""
+			}
+		}
 
 		this.edgeMode = {
 			multi:false,
@@ -94,7 +107,9 @@ class C{
 				this.vertMap = new Map(jo.vertMap)
 				this.edgeMap = new Map(jo.edgeMap)
 				this.edgeMode = jo.edgeMode
+				this.colors = jo.colors
 				this.changed = false
+
 				resolve()
 			})
 		})
@@ -113,6 +128,7 @@ class C{
 				id:this.idgen.id,
 				freeList:this.idgen.freeList,
 			},
+			colors:this.colors,
 		}
 
 		fs.writeFile(p, JSON.stringify(jo), (err) => {
@@ -133,6 +149,10 @@ class C{
 	getEdge(id){
 		if (id) return this.edgeMap.get(id)
 		return null
+	}
+
+	getColor(o){
+		return this.colors[o.color]
 	}
 
 	verts(){
@@ -192,6 +212,13 @@ class C{
 		return ()=>{return this.setMode(k,_v)}
 	}
 
+	customizeColor(i,c){
+		let _c = this.colors[i]
+		this.colors[i] = c
+		this.markAsChanged()
+		return ()=> this.customizeColor(i,_c)
+	}
+
 	getMode(k){
 		let m = this.edgeMode
 		return m[k]
@@ -204,7 +231,7 @@ class C{
 				id:this.idgen.genID(),
 				name:"",
 				content:"",
-				color:"",
+				color:0,
 				edges :[],
 			}
 		}
@@ -247,7 +274,7 @@ class C{
 				id:this.idgen.genID(),
 				name:"",
 				content:"",
-				color:"",
+				color:0,
 				dir:0,//0,1,-1
 				verts:new Array(2),
 			}
@@ -315,7 +342,7 @@ class C{
 		return ()=> this.setName(o,_name)
 	}
 
-	setColor(v,color){
+	setColor(o,color){
 		let _color = o.color
 		o.color = color
 		this.markAsChanged()

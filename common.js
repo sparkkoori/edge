@@ -10,3 +10,7 @@ exports.callRevs = function(revs){
 exports.emptyRev = function(){
 	return ()=>exports.emptyRev()
 }
+
+exports.rgbToHex = function(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}

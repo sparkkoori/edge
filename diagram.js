@@ -172,6 +172,13 @@ class C{
 		return arr
 	}
 
+	getSelectedNode(){
+		for (let n of this.nodes) {
+			if (n.selected) return n
+		}
+		return null
+	}
+
 	forEachSelected(fn){
 		this.forEachSelectedNode(fn)
 		this.forEachSelectedLink(fn)
@@ -395,7 +402,7 @@ class C{
 		let ns = this.stage.selectAll(".node")
 		ns
 			.style("stroke",d=>d.selected?"#f22":"#666")
-			.style('fill',d=>d.color||"#ccc")
+			.style('fill',d=>this.storage.getColor(d.vert))
 			.style("stroke-width",d=>d.hover?borderWidth*1.8:borderWidth)
 			.style("font-weight",d=>d.hover?800:200)
 
