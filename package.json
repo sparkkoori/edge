@@ -1,0 +1,25 @@
+{
+  "name": "EasyGraphEditor",
+  "version": "1.0.0",
+  "description": "A easy to use graph editor.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "",
+  "keywords": [
+    "graph editor",
+    "diagram",
+		"electron"
+  ],
+  "author": "sparkkoori",
+  "license": "",
+  "devDependencies": {
+    "d3": "^4.10.2",
+    "electron": "~1.7.8"
+  },
+  "dependencies": {
+    "electron-settings": "^3.1.2",
+    "js-autocomplete": "^1.0.4"
+  }
+}

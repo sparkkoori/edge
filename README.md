@@ -1,2 +1,2 @@
-# easy-graph-editor
-A easy to use graph editor.
+# Edge
+A easy to use graph(discrete mathematics) editor.
