@@ -1,5 +1,6 @@
 {
-  "name": "Edge",
+  "name": "edge",
+  "productName": "Edge",
   "version": "0.10.0",
   "description": "A easy to use graph(discrete mathematics) editor.",
   "main": "main.js",
@@ -15,11 +16,10 @@
   "author": "sparkkoori",
   "license": "MIT",
   "devDependencies": {
-    "d3": "^4.10.2",
     "electron": "~1.7.8"
   },
   "dependencies": {
-    "electron-settings": "^3.1.2",
+    "d3": "^4.10.2",
     "js-autocomplete": "^1.0.4"
   }
 }
