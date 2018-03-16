@@ -6,14 +6,14 @@
   "scripts": {
     "start": "electron ."
   },
-  "repository": "",
+  "repository": "https://github.com/sparkkoori/edge.git",
   "keywords": [
     "graph editor",
     "diagram",
-		"electron"
+    "electron"
   ],
   "author": "sparkkoori",
-  "license": "",
+  "license": "MIT",
   "devDependencies": {
     "d3": "^4.10.2",
     "electron": "~1.7.8"
