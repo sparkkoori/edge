@@ -326,9 +326,8 @@ class C{
 				.attr("r",nodeRadius)
 				.attr("transform","translate(0,0)")
 
-			g.append('text')
+			g.append('text').classed("name",true)
 				.style("stroke-width",0)
-				.style("fill","#666")
 				.attr('text-anchor','middle')
 
 			g.merge(ns)
@@ -354,7 +353,6 @@ class C{
 
 			g.append("path").classed("line",true)
 				.style("fill","transparent")
-				.style('stroke',"#999")
 			g.append("path").classed("bgline",true)
 				.style('stroke-width',borderWidth*5)
 				.style("fill","transparent")
@@ -401,14 +399,14 @@ class C{
 		let directed = this.storage.getMode("directed")
 		let ns = this.stage.selectAll(".node")
 		ns
-			.style("stroke",d=>d.selected?"#f22":"#666")
+			.classed("selected",d=>d.selected)
 			.style('fill',d=>this.storage.getColor(d.vert))
 			.style("stroke-width",d=>d.hover?borderWidth*1.8:borderWidth)
 			.style("font-weight",d=>d.hover?800:200)
 
 		let ls = this.stage.selectAll(".link")
 		ls.select(".line")
-			.style("stroke",d=>d.selected?"#f22":"#666")
+			.classed("selected",d=>d.selected)
 			.style("stroke-width",d=>d.hover?borderWidth*1.8:borderWidth)
 			.style('marker-end',d=>this.isEndArrow(d)?'url(#arrow)':'')
 			.style('marker-start',d=>this.isStartArrow(d)?'url(#arrow-reverse)':'')

@@ -188,15 +188,12 @@ function switchHistoryPanel(){
 		.style("top",0)
 		.style("width","200px")
 		.style("height","auto")
-		.style("background","rgba(230,230,230,0.8)")
 		.style("box-shadow","0px 0px 5px 1px rgba(0,0,0,0.4)")
 
-	panel.append("div")
+	panel.append("div").classed("panel-header",true)
 		.style("height","18px")
 		.style("line-height","18px")
 		.style("padding","2px 5px")
-		.style("border-bottom","solid #999 1px")
-		.style("background","#aaa")
 		.html("History")
 
 	let body = panel.append("div")
@@ -210,33 +207,29 @@ function switchHistoryPanel(){
 			.data(list)
 
 		its.exit().remove()
-		its.enter().append("div")
+		its.enter().append("div").classed("item",true)
 			.style("height","18px")
 			.style("line-height","18px")
 			.style("padding","2px 5px")
-			.style("border-bottom","solid #bbb 1px")
 			.style("-webkit-user-select","none")
 			.style("cursor","default")
 			.on("mouseenter",function(d){
 				if (recorder.isLast(d)) return
-				d3.select(this).style("background","rgba(200,200,200,0.5)")
+				d3.select(this).classed("hover",true)
 			})
 			.on("mouseleave",function(d){
 				if (recorder.isLast(d)) return
-				d3.select(this).style("background","")
+				d3.select(this).classed("hover",false)
 			})
 			.on("click",function(d){
 				recorder.jump(d)
 				diagram.refresh()
 			})
 			.merge(its)
-			.style("color",d=>d.type==1?"#ccc":"#666")
-			.style("background",d=>{
-				if (recorder.isLast(d)){
-					return "rgba(200,200,200,0.8)"
-				}
-				return ""
-			})
+			.classed("undo",d=>d.type==0)
+			.classed("redo",d=>d.type==1)
+			.classed("hover",false)
+			.classed("selected",d=>recorder.isLast(d))
 			.html(d=>d.name + (d.saved?" (save)":""))
 
 		let h = body.node().scrollHeight - body.node().offsetHeight
@@ -362,7 +355,7 @@ function edgeDir(){
 		edges.add(l.edge)
 	})
 
-	if (edges.length==0) return donothing()
+	if (edges.size==0) return donothing()
 	edges = [...edges]
 	let dir = edges[0].dir
 
@@ -531,31 +524,28 @@ function zoomout(){
 }
 
 function customizeColors(){
-	let layer = d3.select("body").select(".color-layer")
+	let layer = d3.select("body").select(".color-customize")
 	if(!layer.empty()){
 		layer.remove()
 	}else{
 		layer = d3.select("body").append("div")
-			.classed("color-layer",true)
+			.classed("color-customize",true)
 			.style("left",0)
 			.style("right",0)
 			.style("top",0)
 			.style("bottom",0)
 			.style("position","absolute")
 			.style("z-index",80)
-			.style("background","rgba(100,100,100,0.2)")
+			.style("background","rgba(0,0,0,0.5)")
 
-		let box = layer.append("div")
+		let box = layer.append("div").classed("body",true)
 			.style("position","relative")
 			.style("top","80px")
 			.style("left","50%")
 			.style("width","200px")
 			.style("margin-left","-110px")
-			.style("background","rgba(200,200,200,0.9)")
 			.style("padding","10px 20px")
-			.style("font-size","14px")
-			.style("color","#333")
-			.style("border-radius","2px")
+			.style("border-radius","3px")
 			.style("box-shadow","0px 0px 5px 1px rgba(0,0,0,0.4)")
 
 		layer.on("click",()=>{layer.remove()})
@@ -565,13 +555,15 @@ function customizeColors(){
 			.data(storage.colors)
 
 		let _its = its.enter().append("div")
-			.style("margin","1px")
+			.style("margin","2px")
+			.style("height","26px")
 		_its.append("div").classed("label",true)
 			.style("display","inline-block")
 			.style("width","60px")
 			.html((d,i)=>"Color "+i)
 		_its.append("input").classed("input",true)
 			.attr("type","color")
+			.style("height","20px")
 			.on("change",function(_,i){
 				let c = d3.color(this.value)
 				let rev = storage.customizeColor(i,c+"")
@@ -639,15 +631,14 @@ function openVertNameBox(str){
 		box.remove()
 	}
 
-	box = d3.select("body").append("div").classed("input-box",true)
+	box = d3.select("body").append("div").classed("rename-box",true)
 		.style("position","absolute")
 		.style("width","100%")
 		.style("height","100%")
-		.style("background-color","rgba(0,0,0,0.2)")
 		.style("top","0px")
 		.style("z-index",100)
-	let ibox = box.append("div")
-		.style("background-color","#eeeeee")
+		.style("background","rgba(0,0,0,0.5)")
+	let ibox = box.append("div").classed("body",true)
 		.style("position","absolute")
 		.style("left","30%")
 		.style("right","30%")
@@ -663,7 +654,7 @@ function openVertNameBox(str){
 			.style("position","relative")
 			.style("width","100%")
 			.style("height","auto")
-			.style("font-size","14px")
+			.style("font-size","12px")
 			.style("padding-bottom","5px")
 			.style("box-sizing","border-box")
 			.style("color","#666666")
@@ -676,13 +667,12 @@ function openVertNameBox(str){
 		.style("position","relative")
 		.style("width","100%")
 		.style("height","28px")
-		.style("font-size","14px")
 		.style("box-sizing","border-box")
 
 	let activeElement = document.activeElement
 	input.node().focus()
 	input.attr("value",str)
-	input.node().setSelectionRange(100,100)
+	input.node().setSelectionRange(0,100)
 
 	//let selected = null
 	let ac = enableNodeSuggestion("#input",function(event, term, vert){
@@ -731,11 +721,10 @@ function openVertFinding(){
 		.style("position","absolute")
 		.style("width","100%")
 		.style("height","100%")
-		.style("background-color","rgba(0,0,0,0.2)")
+		.style("background-color","rgba(0,0,0,0.5)")
 		.style("top","0px")
 		.style("z-index",100)
-	let ibox = box.append("div")
-		.style("background-color","#eeeeee")
+	let ibox = box.append("div").classed("body",true)
 		.style("position","absolute")
 		.style("left","30%")
 		.style("right","30%")
@@ -751,10 +740,9 @@ function openVertFinding(){
 			.style("position","relative")
 			.style("width","100%")
 			.style("height","auto")
-			.style("font-size","14px")
+			.style("font-size","12px")
 			.style("padding-bottom","5px")
 			.style("box-sizing","border-box")
-			.style("color","#666666")
 			.html("Find:")
 	}
 
@@ -764,7 +752,6 @@ function openVertFinding(){
 		.style("position","relative")
 		.style("width","100%")
 		.style("height","28px")
-		.style("font-size","14px")
 		.style("box-sizing","border-box")
 
 	let activeElement = document.activeElement
@@ -823,8 +810,7 @@ function enableNodeSuggestion(id,onSelect){
 			let re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
 			let color = vert.color||"#666"
 			return '<div class="autocomplete-suggestion" data-id="'+vert.id+'" data-val="' + vert.name +
-				'" style="font-size:14px;padding:3px 3px;vertical-align:middle;color:'+color+
-				';border-bottom:solid 1px #dddddd">' +
+				'" style="padding:3px 3px;vertical-align:middle;">' +
 				'<span class="suggestion-type" style="background-color:'+color+'"></span>' +
 				vert.name.replace(re, "<span>$1</span>") + '</div>';
 		},
@@ -845,13 +831,11 @@ function showMsg(t){
 			.style("top","30px")
 			.style("left","50%")
 
-		msg.el.append("div")
+		msg.el.append("div").classed("body",true)
 			.style("position","relative")
 			.style("left","-50%")
-			.style("background","rgba(200,200,200,0.5)")
 			.style("padding","10px 20px")
-			.style("font-size","14px")
-			.style("color","#333")
+			.style("border-radius","3px")
 			.style("box-shadow","0px 0px 5px 1px rgba(0,0,0,0.4)")
 
 		msg.setText = function(t){

@@ -46,7 +46,7 @@ class C{
 		this.edgeMap = new Map()
 		this.dispatch = d3.dispatch("changed","vert:new")
 		this.colors = [
-			"#999999", "#dc3912", "#ff9900", "#109618", "#990099",
+			"#777777", "#dc3912", "#ff9900", "#109618", "#990099",
 			"#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395",
 			// "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300",
 			// "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"
@@ -54,7 +54,7 @@ class C{
 		{
 			for (let i = 0; i < this.colors.length; i++) {
 				let c = d3.hsl(this.colors[i])
-				c.l += 0.1
+				c.l -= 0.2
 				this.colors[i] = c + ""
 			}
 		}
@@ -229,7 +229,7 @@ class C{
 		else{
 			v = {
 				id:this.idgen.genID(),
-				name:"",
+				name:"Untitled",
 				content:"",
 				color:0,
 				edges :[],
