@@ -1,6 +1,30 @@
 # Edge
-A easy to use graph(discrete mathematics) editor.
+Edge is an easy to use desktop graph(discrete mathematics) editor.
 
-## Distribution
+## Goal
+- Pure and simple
+- Large scale
+- Locality
 
-electron-packager . --icon icons/icon.icns --overwrite --out dist
+## Supported Platforms
+- Windows
+- Mac
+
+## Get it
+
+### Build
+You can use [Electron-packager](https://github.com/electron-userland/electron-packager) to make package or installer.
+
+### Download
+
+
+## Development
+Edge is developed base on [Electron](https://github.com/electron/electron), [Node.js](https://github.com/nodejs/node) and SVG.
+
+How to run:
+
+	edge$ npm start
+
+
+## License
+MIT
