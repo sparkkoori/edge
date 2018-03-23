@@ -25,6 +25,7 @@ Edge is developed base on [Electron](https://github.com/electron/electron), [Nod
 
 How to run:
 
+	edge$ npm install
 	edge$ npm start
 
 
