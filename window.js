@@ -203,8 +203,10 @@ function switchHistoryPanel(){
 		.html("History")
 
 	let body = panel.append("div")
+		.classed("scroll",true)
 		.style("height","200px")
 		.style("overflow-y","auto")
+
 
 	let refresh = function(){
 		let list = recorder.list()
