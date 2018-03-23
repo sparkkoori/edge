@@ -266,7 +266,7 @@ class C{
 	newEdge (e,v0,v1,out) {
 		if (!this.precheckEdge(v0,v1)) {
 			if (out) out.edge = null
-			return ()=>{}
+			return common.emptyRev()
 		}
 		if (e) this.idgen.regID(e.id)
 		else{
@@ -305,7 +305,7 @@ class C{
 
 		if (!this.precheckEdge(v0,v1)) {
 			this._setEnds(e,_v0,_v1)
-			return ()=>{}
+			return common.emptyRev()
 		}
 
 		this._setEnds(e,v0,v1)

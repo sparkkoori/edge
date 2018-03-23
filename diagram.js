@@ -40,6 +40,8 @@ class C{
 
 
 		this.stage = this.svg.append("g")
+		this.linkGroup = this.stage.append("g").classed("link-group",true)
+		this.nodeGroup = this.stage.append("g").classed("node-group",true)
 		// this.stage.append("circle")
 		// 	.attr("r",40)
 
@@ -130,6 +132,11 @@ class C{
 		for (let v of this.storage.verts()) {
 			this.section.add(v)
 		}
+		if(!quiet)this.refresh()
+	}
+
+	undisplayAll(quiet){
+		this.section.clear()
 		if(!quiet)this.refresh()
 	}
 
@@ -279,8 +286,8 @@ class C{
 						id:v.id,
 						vert:v,
 						links:[],
-						x:this.pos[0],
-						y:this.pos[1],
+						x:this.pos[0] + Math.random(),
+						y:this.pos[1] + Math.random(),
 						virtual:!section.has(v),
 					})
 				}
@@ -310,12 +317,11 @@ class C{
 		this.links = links
 
 		//render
-		let ns = this.stage.selectAll(".node")
+		let ns = this.nodeGroup.selectAll(".node")
 			.data([...nodes],d=>d.id)
 		{
 			ns.exit().remove()
 			let g = ns.enter().append("g").classed("node",true)
-				.each(function(d){d.el = d3.select(this)})
 				.call(this.enableDragToMove)
 				.style("stroke-width",borderWidth)
 				.on("mouseenter",d=>this.onNodeMouseEnter(d,d3.event))
@@ -331,7 +337,7 @@ class C{
 				.attr('text-anchor','middle')
 
 			g.merge(ns)
-			//this.stage.selectAll(".node")
+				.each(function(d){d.el = d3.select(this)})
 				.select("circle")
 				.style("opacity",d=>{
 					if (d.virtual) return 0.7
@@ -344,12 +350,11 @@ class C{
 		}
 
 
-		let ls = this.stage.selectAll(".link")
+		let ls = this.linkGroup.selectAll(".link")
 			.data([...links],d=>d.id)
 		{
 			ls.exit().remove()
 			let g = ls.enter().append("g").classed("link",true)
-				.each(function(d){d.el = d3.select(this)})
 
 			g.append("path").classed("line",true)
 				.style("fill","transparent")
@@ -360,6 +365,9 @@ class C{
 				.on("mouseenter",d=>this.onLinkMouseEnter(d,d3.event))
 				.on("mouseleave",d=>this.onLinkMouseLeave(d,d3.event))
 				.on("click",d=>this.onLinkClick(d,d3.event))
+
+			g.merge(ls)
+				.each(function(d){d.el = d3.select(this)})
 		}
 
 		this.refreshName()
@@ -397,14 +405,14 @@ class C{
 
 	refreshStyle(){
 		let directed = this.storage.getMode("directed")
-		let ns = this.stage.selectAll(".node")
+		let ns = this.nodeGroup.selectAll(".node")
 		ns
 			.classed("selected",d=>d.selected)
 			.style('fill',d=>this.storage.getColor(d.vert))
 			.style("stroke-width",d=>d.hover?borderWidth*1.8:borderWidth)
 			.style("font-weight",d=>d.hover?800:200)
 
-		let ls = this.stage.selectAll(".link")
+		let ls = this.linkGroup.selectAll(".link")
 		ls.select(".line")
 			.classed("selected",d=>d.selected)
 			.style("stroke-width",d=>d.hover?borderWidth*1.8:borderWidth)

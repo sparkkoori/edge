@@ -275,8 +275,15 @@ const template = [
 				}
 			},
 			{
-				label: 'Switch Adjacent Display',
+				label: 'Show Vertex Alone',
 				accelerator: 'Shift+CmdOrCtrl+D',
+				click () {
+					sendCmd("showVertAlone")
+				}
+			},
+			{
+				label: 'Switch Adjacent Display',
+				accelerator: 'Shift+Alt+D',
 				click () {
 					sendCmd("displayAdjacent")
 				}

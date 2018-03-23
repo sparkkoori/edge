@@ -90,6 +90,10 @@ class Recorder{
 		return this.stack0.length
 	}
 
+	numRedos(){
+		return this.stack1.length
+	}
+
 	isLast(record){
 		let l = this.stack0.length
 		if (l==0) return null == record
@@ -267,6 +271,7 @@ function undo(){
 }
 
 function redo(){
+	if (recorder.numRedos()==0) return
 	recorder.redo()
 	diagram.refresh()
 }
@@ -282,6 +287,11 @@ function del(){
 		let rev = storage.delVert(n.vert)
 		revs.push(rev)
 	})
+
+	if (revs.length==0){
+		showMsgNone()
+		return
+	}
 
 	recorder.record("Delete",()=>common.callRevs(revs))
 	diagram.refresh()
@@ -315,15 +325,25 @@ function newVertR(){
 
 function newEdge(reverse){
 	let mode = storage.mode
+	let nodes = []
+	diagram.forEachSelectedNode(n=>{
+		nodes.push(n)
+	})
+	if (nodes.length==0){
+		showMsgNoneVertex()
+		return
+	}
+
 	let hover = diagram.getHoverNode()
-	if (!hover) return donothing()
+	if (!hover) return showMsg("You must point on a vertex.")
 
 	let revs = []
 	diagram.forEachSelectedNode(n=>{
 		let out = {}
-		revs.push(storage.newEdge(null,n.vert,hover.vert,out))
+		let rev = storage.newEdge(null,n.vert,hover.vert,out)
 		let e = out.edge
 		if (!e) return
+		revs.push(rev)
 		if (storage.getMode("directed")){
 			if (reverse){
 				revs.push(storage.setDir(e,-1))
@@ -332,6 +352,9 @@ function newEdge(reverse){
 			}
 		}
 	})
+
+	if (revs.length==0) return //new edge can fail.
+
 	recorder.record("New Edge"+(reverse?" (Rerverse)":""),()=>common.callRevs(revs))
 	diagram.refresh()
 }
@@ -355,7 +378,7 @@ function edgeDir(){
 		edges.add(l.edge)
 	})
 
-	if (edges.size==0) return donothing()
+	if (edges.size==0) return showMsgNoneEdge()
 	edges = [...edges]
 	let dir = edges[0].dir
 
@@ -383,10 +406,10 @@ function edgeDir(){
 function autoLayout(){
 	if (diagram.simPaused){
 		diagram.resumeSim()
-		showMsg("Auto layout: resumed")
+		showMsg("Auto layout: Resumed")
 	}else{
 		diagram.pauseSim()
-		showMsg("Auto layout: paused")
+		showMsg("Auto layout: Paused")
 	}
 }
 
@@ -394,7 +417,7 @@ function rename(){
 	if(isVertNameBoxOpened()) return
 	let nodes = diagram.getSelectedNodes()
 	let n = nodes.find(_=>true)
-	if (!n) return showMsg("No vertex has been selected.")
+	if (!n) return showMsgNoneVertex()
 	let pm = openVertNameBox(n.name)
 	pm.then(name=>{
 		let revs = []
@@ -413,21 +436,39 @@ function showOrHideVert(){
 		verts.push(n.vert)
 		if (n.virtual) displayed = false
 	})
-	if (verts.length==0) return
+	if (verts.length==0) {
+		showMsgNoneVertex()
+		return
+	}
 	for (let v of verts) {
 		if (displayed)
 			diagram.undisplay(v,true)
 		else
 			diagram.display(v,true)
 	}
+	diagram.refresh()
+}
 
+function showVertAlone(){
+	let verts = []
+	diagram.forEachSelectedNode(n=>{
+		verts.push(n.vert)
+	})
+	if (verts.length==0) {
+		showMsgNoneVertex()
+		return
+	}
+	diagram.undisplayAll(true)
+	for (let v of verts) {
+		diagram.display(v,true)
+	}
 	diagram.refresh()
 }
 
 function displayAdjacent(){
 	let d = diagram.displaySurround = !diagram.displaySurround
 	diagram.refresh()
-	showMsg("Display Adjacent: " + (d?"true":"false"))
+	showMsg("Display Adjacent: " + (d?"True":"False"))
 }
 
 function findVert(){
@@ -578,6 +619,7 @@ function customizeColors(){
 					let hex = common.rgbToHex(c.r,c.g,c.b)
 					this.value = hex
 				})
+			diagram.refreshStyle()
 		}
 		storage.dispatch.on("changed",refresh)
 		refresh()
@@ -588,7 +630,7 @@ function switchColor(){
 	let revs = []
 	let nodes = diagram.getSelectedNodes()
 	if (nodes.length ==0) {
-		showMsgEmptySelection()
+		showMsgNoneVertex()
 		return
 	}
 	let c = nodes[0].vert.color
@@ -617,8 +659,16 @@ function switchColor(){
 
 /***********************************************************/
 
-function showMsgEmptySelection(){
-	//TODO
+function showMsgNone(){
+	showMsg("None of the vertices or edges were selected.")
+}
+
+function showMsgNoneVertex(){
+	showMsg("None of the vertices were selected.")
+}
+
+function showMsgNoneEdge(){
+	showMsg("None of the edges were selected.")
 }
 
 function isVertNameBoxOpened(){
