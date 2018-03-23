@@ -1,5 +1,6 @@
 # Edge
 Edge is an easy to use desktop graph(discrete mathematics) editor.
+![Screenshot of Edge](/doc/screenshot.png "Screenshot")
 
 ## Goal
 - Pure and simple
