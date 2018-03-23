@@ -25,7 +25,12 @@ const template = [
 				label: 'Open',
 				accelerator: 'CmdOrCtrl+O',
 				click () {
-					electron.dialog.showOpenDialog({properties: ['openFile']},function(ps){
+					electron.dialog.showOpenDialog({
+						properties: ['openFile'],
+						filters: [
+					    {name: 'Edge', extensions: ['edge']},
+					  ],
+					},function(ps){
 						if (!ps) return
 						openWindow(ps[0])
 					})
@@ -424,7 +429,7 @@ app.on('ready', function() {
 		electron.dialog.showSaveDialog({
 			defaultPath:p||"",
 			filters: [
-		    {name: 'Easy Graph Editor', extensions: ['ege']},
+		    {name: 'Edge', extensions: ['edge']},
 		  ],
 		},function(ps){
 			if (!ps){

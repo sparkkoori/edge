@@ -31,13 +31,15 @@ async function init(){
 			return
 		}
 		body.html("")
+	}else{
+		// storage.loadTestData()
+		storage.newVert()
 	}
 	storage.dispatch.on("changed",refreshTitle)
 	refreshTitle()
 
 
 	//diagram
-	// storage.loadTestData()
 	diagram = new Diagram(body)
 	diagram.bindStorage(storage)
 	diagram.displayAll()

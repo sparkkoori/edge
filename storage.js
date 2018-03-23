@@ -92,6 +92,7 @@ class C{
 	}
 
 	load(p){
+		this.path = p
 		return new Promise((resolve,reject) => {
 			fs.readFile(p, (err, data) => {
 				console.log(err);
