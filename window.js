@@ -651,10 +651,16 @@ function switchColor(){
 	for (let i = 0; i < 10; i++) {
 		global["color"+i] = function(){
 			let revs = []
-			diagram.forEachSelectedNode(n=>{
+			let nodes = diagram.getSelectedNodes()
+			if (nodes.length ==0) {
+				showMsgNoneVertex()
+				return
+			}
+			for (let n of nodes) {
 				let v = n.vert
 				revs.push(storage.setColor(v,i))
-			})
+			}
+			
 			recorder.record("Color "+ i,()=>common.callRevs(revs))
 			diagram.refreshStyle()
 		}
