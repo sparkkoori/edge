@@ -1,1 +1,1 @@
-electron-packager . --icon icons/icon.icns --overwrite --out dist
+electron-packager . --platform=all --icon icons/icon.icns --overwrite --out dist

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-electron-packager . --icon icons/icon.ico --overwrite --out dist
+electron-packager . --platform=all --icon icons/icon.icns --overwrite --out dist

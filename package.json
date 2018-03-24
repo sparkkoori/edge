@@ -1,7 +1,7 @@
 {
   "name": "edge",
   "productName": "Edge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An easy to use desktop graph(discrete mathematics) editor.",
   "main": "main.js",
   "scripts": {
