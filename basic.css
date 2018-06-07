@@ -23,7 +23,7 @@ textarea:focus, input:focus{
 }
 
 .node{
-	stroke:#aaa;
+	stroke:#666;
 }
 
 .node .name{
