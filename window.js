@@ -35,7 +35,7 @@ async function init(){
 		// storage.loadTestData()
 		storage.newVert()
 	}
-	storage.dispatch.on("changed",refreshTitle)
+	storage.dispatch.on("changed.refreshTitle",refreshTitle)
 	refreshTitle()
 
 
@@ -625,7 +625,7 @@ function customizeColors(){
 				})
 			diagram.refreshStyle()
 		}
-		storage.dispatch.on("changed",refresh)
+		storage.dispatch.on("changed.customizeColors",refresh)
 		refresh()
 	}
 }
@@ -660,7 +660,7 @@ function switchColor(){
 				let v = n.vert
 				revs.push(storage.setColor(v,i))
 			}
-			
+
 			recorder.record("Color "+ i,()=>common.callRevs(revs))
 			diagram.refreshStyle()
 		}
